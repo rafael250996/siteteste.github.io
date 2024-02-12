@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Usuário</title>
+  <!-- Adicione os scripts do Firebase aqui -->
+  <script type="module"> 
+    // Importa as funções necessárias do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
+
+    // Configuração do seu projeto Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCL6cb0cqR539KO3KYcHsVvcLsEmr6QXc",
+      authDomain: "projeto-site-40654.firebaseapp.com",
+      databaseURL: "https://projeto-site-40654-default-rtdb.firebaseio.com",
+      projectId: "projeto-site-40654",
+      storageBucket: "projeto-site-40654.appspot.com",
+      messagingSenderId: "718667484125",
+      appId: "1:718667484125:web:994e89c34ebb9a94a44434",
+      measurementId: "G-FWE7Z6SWVW"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // Referência ao Firestore
+    const db = getFirestore(app);
+    
+    // Referência à autenticação
+    const auth = getAuth(app);
+
+    // Função para realizar o login
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          alert("Login bem-sucedido!");
+        })
+        .catch((error) => {
+          console.error("Erro ao realizar o login:", error);
+        });
+    }
+
+    // Função para cadastrar um novo usuário
+    function signup() {
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+
+      // Adiciona um novo documento à coleção "usuarios"
+      addDoc(collection(db, "usuarios"), {
+        email: email,
+        senha: password
+      })
+      .then((docRef) => {
+        alert("Usuário cadastrado com sucesso!");
+      })
+      .catch((error) => {
+        console.error("Erro ao cadastrar usuário:", error);
+      });
+    }
+
+    // Adiciona ouvintes de eventos aos botões
+    document.getElementById('loginButton').addEventListener('click', login);
+    document.getElementById('signupButton').addEventListener('click', signup);
+  </script>
+</head>
+<body>
+  <h1>Login e Cadastro de Usuário</h1>
+
+  <!-- Formulário de Login -->
+  <form id="loginForm">
+    <label for="loginEmail">Email:</label>
+    <input type="email" id="loginEmail" required>
+
+    <label for="loginPassword">Senha:</label>
+    <input type="password" id="loginPassword" required>
+
+    <!-- Chama a função 'login()' ao clicar no botão -->
+    <button type="button" id="loginButton">Login</button>
+  </form>
+
+  <!-- Formulário de Cadastro -->
+  <form id="signupForm">
+    <label for="signupEmail">Email:</label>
+    <input type="email" id="signupEmail" required>
+
+    <label for="signupPassword">Senha:</label>
+    <input type="password" id="signupPassword" required>
+
+    <!-- Chama a função 'signup()' ao clicar no botão -->
+    <button type="button" id="signupButton">Cadastrar</button>
+  </form>
+</body>
+</html>
